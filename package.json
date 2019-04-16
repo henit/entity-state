@@ -2,7 +2,11 @@
   "name": "entity-state",
   "version": "0.0.1",
   "description": "Composable meta-logic for JSON-based entity data",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "files": [
+    "src",
+    "lib"
+  ],
   "scripts": {
     "compile": "babel src --out-dir lib",
     "compile:watch": "babel --watch src --out-dir lib",
