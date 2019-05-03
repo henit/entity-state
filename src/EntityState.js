@@ -145,14 +145,33 @@ EntityState.clear = (source, sourcePath) => {
 };
 
 
-EntityState.dataWithChanges = (source = {}) => {
-  const { data = {}, pathChange = {} } = source;
+EntityState.clean = (source, sourcePath) => {
+  return (source && sourcePath) ?
+    _set(sourcePath, {
+      ...(_get(sourcePath, source) || {}),
+      pathChange: {},
+      pathError: {}
+    }, source)
+    :
+    {
+      ...(source || {}),
+      pathChange: {},
+      pathError: {}
+    };
+};
+
+EntityState.dataWithChanges = (state = {}) => {
+  const { data = {}, pathChange = {} } = state;
 
   // Merge staged changes with original data to form the active data set
-  return Object.keys(pathChange).reduce((data, path) => ({
-    ...data,
-    [path]: pathChange[path]
-  }), data);
+  // return Object.keys(pathChange).reduce((data, path) => ({
+  //   ...data,
+  //   [path]: pathChange[path]
+  // }), data);
+
+  return Object.keys(pathChange).reduce((data, path) =>
+    _set(path, pathChange[path], data)
+  , data);
 
 };
 
