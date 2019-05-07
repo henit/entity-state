@@ -5,6 +5,12 @@ let Http = {};
 
 Http._fetch = (...args) => fetch(...args);
 
+/**
+ * Make HTTP Request
+ *
+ * @param {object} options Request options
+ * @return {object} Promise resolved with { statusCode, response, error }
+ */
 Http.request = async (options = {}) => {
   const {
     baseUrl,
@@ -93,6 +99,14 @@ Http.request = async (options = {}) => {
   }
 };
 
+/**
+ * Make GET request
+ *
+ * @param {string} path URL Path
+ * @param {object} query URL Query
+ * @param {object} options Request options
+ * @return {object} Promise resolved with { statusCode, response, error }
+ */
 Http.get = (path, query, options = {}) =>
   Http.request({
     ...options,
@@ -101,6 +115,14 @@ Http.get = (path, query, options = {}) =>
     query
   });
 
+/**
+ * Make POST request
+ *
+ * @param {string} path URL Path
+ * @param {object} body Request body
+ * @param {object} options Request options
+ * @return {object} Promise resolved with { statusCode, response, error }
+ */
 Http.post = (path, body, options = {}) =>
   Http.request({
     ...options,
@@ -109,6 +131,14 @@ Http.post = (path, body, options = {}) =>
     body
   });
 
+/**
+ * Make PUT request
+ *
+ * @param {string} path URL Path
+ * @param {object} body Request body
+ * @param {object} options Request options
+ * @return {object} Promise resolved with { statusCode, response, error }
+ */
 Http.put = (path, body, options = {}) =>
   Http.request({
     ...options,
@@ -117,6 +147,14 @@ Http.put = (path, body, options = {}) =>
     body
   });
 
+/**
+ * Make PATCH request
+ *
+ * @param {string} path URL Path
+ * @param {object} body Request body
+ * @param {object} options Request options
+ * @return {object} Promise resolved with { statusCode, response, error }
+ */
 Http.patch = (path, body, options = {}) =>
   Http.request({
     ...options,
@@ -125,6 +163,14 @@ Http.patch = (path, body, options = {}) =>
     body
   });
 
+/**
+ * Make DELETE request
+ *
+ * @param {string} path URL Path
+ * @param {object} query URL Query
+ * @param {object} options Request options
+ * @return {object} Promise resolved with { statusCode, response, error }
+ */
 Http.delete = (path, query, options = {}) =>
   Http.request({
     ...options,
@@ -133,6 +179,12 @@ Http.delete = (path, query, options = {}) =>
     query
   });
 
+/**
+ * Make composed call functions to all methods with the given options merged in
+ *
+ * @param {object} options Request options
+ * @return {object} Function literal
+ */
 Http.withOptions = (options = {}) => ({
   request: (callOptions = {}) => Http.request({ ...options, ...callOptions }),
   get: (path, query, callOptions = {}) => Http.get(path, query, { ...options, ...callOptions }),

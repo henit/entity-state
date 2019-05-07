@@ -2,13 +2,10 @@ import _get from 'lodash/fp/get';
 import _set from 'lodash/fp/set';
 
 
-
-
 let EntityState = {};
 
 /**
- * EntityState.initialize()
- * EntityState.initialize('activeUser', source)
+ * Initialize state
  *
  * @param {object} source Data source containing the state
  * @param {string} sourcePath Path inside source data where state should be located
@@ -39,9 +36,7 @@ EntityState.initialize = (source, sourcePath) => {
 };
 
 /**
- * EntityState.load(user)
- * EntityState.load(user, state)
- * EntityState.load(user, state, 'activeUser')
+ * Load data into state
  *
  * @param {object|array} data Data to load
  * @param {object} source Data source containing the state
@@ -64,9 +59,7 @@ EntityState.load = (data, source, sourcePath) => {
 };
 
 /**
- * EntityState.set('foo', bar)
- * EntityState.set('foo', bar, state)
- * EntityState.set('foo', bar, state, 'activeUser')
+ * Set a new value at the given path in the data
  *
  * @param {string} path Path to where inside the data-set to set the new value
  * @param {object|array} value Value to set at (path) in data-set
@@ -89,11 +82,7 @@ EntityState.set = (path, value, source, sourcePath) => {
 };
 
 /**
- * EntityState.stage('foo', bar)
- * EntityState.stage('foo', bar, state)
- * EntityState.stage('foo', bar, state, 'activeUser')
- *
- * (Alt names: Prepare, Present, Suggest, Draft, Shape)
+ * Stage a new value at a given path of the data in `pathChange`, while keeping the original set in `data`
  *
  * @param {string} path Path to where inside the state data-set to stage the new value
  * @param {object|array} value Value to set at (path) in the state data-set
@@ -115,6 +104,14 @@ EntityState.stage = (path, value, source, sourcePath) => {
     _set(`pathChange["${path}"]`, value, source || EntityState.initialize());
 };
 
+/**
+ * Set an error in the state, that is regarding the whole data set or surrounding processes.
+ *
+ * @param {object} error Error object
+ * @param {object} source Data source containing the state
+ * @param {string} sourcePath Path inside source data where state should be located
+ * @return {object} New state
+ */
 EntityState.error = (error, source, sourcePath) => {
   return (source && sourcePath) ?
     _set(`${sourcePath}.error`, error, source)
@@ -122,6 +119,15 @@ EntityState.error = (error, source, sourcePath) => {
     _set('error', error, source || EntityState.initialize());
 };
 
+/**
+ * Set an error for a given path in the state
+ *
+ * @param {string} path Path to the value inside the state data-set where this error applies
+ * @param {object} error Error object
+ * @param {object} source Data source containing the state
+ * @param {string} sourcePath Path inside source data where state should be located
+ * @return {object} New state
+ */
 EntityState.pathError = (path, error, source, sourcePath) => {
   return (source && sourcePath) ?
     _set(`${sourcePath}.pathError["${path}"]`, error, source)
@@ -130,8 +136,7 @@ EntityState.pathError = (path, error, source, sourcePath) => {
 };
 
 /**
- * EntityState.clear()
- * EntityState.clear(state, 'activeUser')
+ * Clear the state structure, removing both the data and all metadata
  *
  * @param {object} source Data source containing the state
  * @param {string} sourcePath Path inside source data where state is located
@@ -144,7 +149,13 @@ EntityState.clear = (source, sourcePath) => {
     undefined;
 };
 
-
+/**
+ * Clean the structure, keeping the data but removing any local change or errors in the metadata
+ *
+ * @param {object} source Data source containing the state
+ * @param {string} sourcePath Path inside source data where state is located
+ * @return {object} New state
+ */
 EntityState.clean = (source, sourcePath) => {
   return (source && sourcePath) ?
     _set(sourcePath, {
@@ -160,19 +171,19 @@ EntityState.clean = (source, sourcePath) => {
     };
 };
 
+/**
+ * Get a copy of the data from a given state object, with the local changes merged in to the structure
+ *
+ * @param {object} state State containing the relevant data
+ * @return {object|array} Data structure
+ */
 EntityState.dataWithChanges = (state = {}) => {
   const { data = {}, pathChange = {} } = state;
 
   // Merge staged changes with original data to form the active data set
-  // return Object.keys(pathChange).reduce((data, path) => ({
-  //   ...data,
-  //   [path]: pathChange[path]
-  // }), data);
-
   return Object.keys(pathChange).reduce((data, path) =>
     _set(path, pathChange[path], data)
   , data);
-
 };
 
 
