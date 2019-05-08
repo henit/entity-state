@@ -13,16 +13,17 @@ npm install entity-data
 ## Usage
 
 ```
+// ES6
+import { EntityState, Http } from 'entity-state';
+
 // CommonJS
 var EntityState = require('entity-state').EntityState;
-
-// ES6
-import { EntityState } from 'entity-state';
+var Http = require('entity-state').Http;
 ```
 
 ## The structure
 
-An entity state, is an object that consist the data (like an object representing an entity or an array with a list of entities), and the metadata describing it. The object contains the following properties:
+An entity state is an object that contains the data (like an object representing an entity or an array with a list of entities), and the metadata describing it. The object contains the following properties:
 
 Property        | Type                | Description
 ---             | ---                 | ---
@@ -311,3 +312,7 @@ const {
 ```
 
 Giving `get`/`post` functions that can be used with relative paths without providing the base url.
+
+---
+
+*__Entity State__ is being actively used, and is in development. Suggestions and contributions are very welcome!*
