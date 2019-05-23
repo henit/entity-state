@@ -12,7 +12,7 @@
     "compile:watch": "babel --watch src --out-dir lib",
     "test": "npm run test:jest && npm run test:eslint",
     "test:eslint": "eslint . --ext js,jsx",
-    "test:jest": "jest",
+    "test:jest": "jest ./src",
     "test:jest:watch": "jest --watch",
     "clean": "rimraf lib",
     "preversion": "npm run test & npm run compile",

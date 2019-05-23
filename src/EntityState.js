@@ -1,8 +1,14 @@
 import _get from 'lodash/fp/get';
 import _set from 'lodash/fp/set';
 
-
 let EntityState = {};
+
+function setState(state, source, sourcePath) {
+  return (source && sourcePath) ?
+    _set(sourcePath, state, source)
+    :
+    state;
+}
 
 /**
  * Initialize state
@@ -17,6 +23,9 @@ EntityState.initialize = (source, sourcePath) => {
     data: undefined,
     // Unstaged changes to the data (like before sending to a server)
     pathChange: {}, // { [path]: changed-value }
+    // Initial value, at the time it started changing in this state. For undo features and showing
+    // what properties was changed after changes has been submitted.
+    pathInitial: {},
     // Timestamp when this state where first initialized
     initializedAt: undefined,
     // Timestamp when this state where last loaded
@@ -29,11 +38,21 @@ EntityState.initialize = (source, sourcePath) => {
     pathError: {}
   };
 
-  return (source && sourcePath) ?
-    _set(sourcePath, state, source)
-    :
-    state;
+  // return (source && sourcePath) ?
+  //   _set(sourcePath, state, source)
+  //   :
+  //   state;
+  return setState(state, source, sourcePath);
 };
+
+function getState(source, sourcePath) {
+  return (
+    (source && sourcePath) ?
+      _get(sourcePath, source)
+      :
+      source
+  ) || EntityState.initialize();
+}
 
 /**
  * Load data into state
@@ -44,18 +63,15 @@ EntityState.initialize = (source, sourcePath) => {
  * @return {object} New state
  */
 EntityState.load = (data, source, sourcePath) => {
-  return (source && sourcePath) ?
-    _set(sourcePath, {
-      ...EntityState.initialize(),
-      pathChange: _get(`${sourcePath}.pathChange`, source) || {},
-      data
-    }, source)
-    :
-    {
-      ...EntityState.initialize(),
-      pathChange: _get('pathChange', source) || {},
-      data
-    };
+
+  const state = getState(source, sourcePath);
+
+  return setState({
+    // ...state,
+    ...EntityState.initialize(),
+    pathChange: state.pathChange || {},
+    data
+  }, source, sourcePath);
 };
 
 /**
@@ -98,10 +114,29 @@ EntityState.stage = (path, value, source, sourcePath) => {
   //   throw new Error('EntityState.set - source must be an object or array');
   // }
 
-  return (source && sourcePath) ?
-    _set(`${sourcePath}.pathChange["${path}"]`, value, source)
-    :
-    _set(`pathChange["${path}"]`, value, source || EntityState.initialize());
+  // const prevState = (source && sourcePath) ? _get(sourcePath, source)
+  const prevState = getState(source, sourcePath);
+
+  // const withChange = _set(`pathChange["${path}"]`, value, prevState);
+
+  // return
+
+  const initialValue = _get(`pathInitial["${path}"]`, prevState) || _get(`data.${path}`, prevState);
+
+  const state = _set(`pathInitial["${path}"]`, initialValue,
+    _set(`pathChange["${path}"]`, value, prevState)
+  );
+
+  return setState(state, source, sourcePath);
+
+  // return setState({
+  //   pathInitial: {}
+  // }, source, sourcePath);
+
+  // return (source && sourcePath) ?
+  //   _set(`${sourcePath}.pathChange["${path}"]`, value, source)
+  //   :
+  //   _set(`pathChange["${path}"]`, value, source || EntityState.initialize());
 };
 
 /**
@@ -185,6 +220,5 @@ EntityState.dataWithChanges = (state = {}) => {
     _set(path, pathChange[path], data)
   , data);
 };
-
 
 export default EntityState;

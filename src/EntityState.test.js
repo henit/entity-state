@@ -4,6 +4,7 @@ import EntityState from './EntityState';
 const initialState = {
   data: undefined,
   pathChange: {},
+  pathInitial: {},
   initializedAt: undefined,
   loadedAt: undefined,
   changedAt: undefined,
@@ -281,6 +282,9 @@ describe('\nEntityState.stage', () => {
         ...stateWithSomeData,
         pathChange: {
           'company.location': 'Somewhere else'
+        },
+        pathInitial: {
+          'company.location': someData.company.location
         }
       });
     });
@@ -312,6 +316,9 @@ describe('\nEntityState.stage', () => {
           ...structureWithState.something,
           pathChange: {
             'company.location': 'Somewhere else'
+          },
+          pathInitial: {
+            'company.location': someData.company.location
           }
         }
       });
