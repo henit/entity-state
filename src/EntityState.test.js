@@ -9,7 +9,11 @@ const initialState = {
   loadedAt: undefined,
   changedAt: undefined,
   error: undefined,
-  pathError: {}
+  pathError: {},
+  loading: false,
+  updating: false,
+  pathLoading: {},
+  padhUpdating: {}
 };
 
 const someData = {
