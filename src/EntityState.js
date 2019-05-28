@@ -25,7 +25,8 @@ EntityState.initialize = (source, sourcePath) => {
     pathChange: {}, // { [path]: changed-value }
     // Initial value, at the time it started changing in this state. For undo features and showing
     // what properties was changed after changes has been submitted.
-    pathInitial: {},
+    pathInitial: {}, // { [path]: initial-value }
+
     // Timestamp when this state where first initialized
     initializedAt: undefined,
     // Timestamp when this state where last loaded
@@ -35,7 +36,18 @@ EntityState.initialize = (source, sourcePath) => {
     // Error that is relevant for the whole data set
     error: undefined,
     // Errors that apply to a given place in the data structure
-    pathError: {}
+    pathError: {},
+
+    // Request-related
+    // An operation that will load new data into this state when done is pending
+    loading: false,
+    // An operation that is updating the remote source of this data is pending
+    updating: false,
+
+    // Loading data pending for a given subset of data
+    pathLoading: {}, // [path]: true
+    // Updating data pending for given subset of data
+    padhUpdating: {} // [path]: true
   };
 
   // return (source && sourcePath) ?
