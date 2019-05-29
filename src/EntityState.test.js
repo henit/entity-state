@@ -359,3 +359,58 @@ describe('\nEntityState.clear', () => {
   });
 
 });
+
+
+describe('\nEntityState.dataWithChanges', () => {
+  it('should return data unchanged for state without any pathChange', () => {
+    const actual = EntityState.dataWithChanges({
+      data: {
+        foo: 'Foo!!',
+        bar: 'Bar??'
+      }
+    });
+    const expected = {
+      foo: 'Foo!!',
+      bar: 'Bar??'
+    };
+    expect(actual).toEqual(expected);
+  });
+
+  it('should merge data and pathChange correctly', () => {
+    const actual = EntityState.dataWithChanges({
+      data: {
+        foo: 'Foo!!',
+        bar: 'Bar??'
+      },
+      pathChange: {
+        foo: 'foooooooo'
+      }
+    });
+    const expected = {
+      foo: 'foooooooo',
+      bar: 'Bar??'
+    };
+    expect(actual).toEqual(expected);
+  });
+
+  it('should ignore properties set to undefined in pathChange', () => {
+    const actual = EntityState.dataWithChanges({
+      data: {
+        foo: 'Foo!!',
+        bar: 'Bar??'
+      },
+      pathChange: {
+        foo: undefined,
+        bar: 'BAAAAR',
+        foobar: 'Foo Bar'
+      }
+    });
+    const expected = {
+      foo: 'Foo!!',
+      bar: 'BAAAAR',
+      foobar: 'Foo Bar'
+    };
+    expect(actual).toEqual(expected);
+  });
+
+});
