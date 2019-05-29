@@ -43,12 +43,16 @@ Http.request = async (options = {}) => {
   }
 
   let res;
+
+  const fetchBody = JSON.stringify(body);
+
   try {
+    // Only fetch inside this try-catch to avoid other (non-request related) errors to be catched outside
     res = await Http._fetch(url, {
       headers: fetchHeaders,
       method,
       credentials,
-      body: (contentType && contentType.includes('json')) ? JSON.stringify(body) : body
+      body: (contentType && contentType.includes('json')) ? fetchBody : body
     });
 
   } catch (e) {
