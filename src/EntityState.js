@@ -230,13 +230,11 @@ EntityState.dataWithChanges = (state = {}) => {
     pathChange = {}
   } = state;
 
-  const pathChangeKeys = Object.keys(pathChange)
-    .filter(key => pathChange[key] !== undefined);
-
   // Merge staged changes with original data to form the active data set
-  return pathChangeKeys.reduce((data, path) =>
-    _set(path, pathChange[path], data)
-  , data);
+  return Object.keys(pathChange)
+    .reduce((data, path) =>
+      _set(path, pathChange[path], data)
+    , data);
 };
 
 export default EntityState;

@@ -406,7 +406,7 @@ describe('\nEntityState.dataWithChanges', () => {
       }
     });
     const expected = {
-      foo: 'Foo!!',
+      //foo: 'Foo!!',
       bar: 'BAAAAR',
       foobar: 'Foo Bar'
     };
