@@ -10,10 +10,12 @@ const initialState = {
   changedAt: undefined,
   error: undefined,
   pathError: {},
+  mode: undefined,
+  pathMode: {},
   loading: false,
   updating: false,
   pathLoading: {},
-  padhUpdating: {}
+  pathUpdating: {}
 };
 
 const someData = {
@@ -358,6 +360,38 @@ describe('\nEntityState.clear', () => {
     });
   });
 
+});
+
+describe('EntityState.indent', () => {
+  it('should indent limited state sets', () => {
+    expect(
+      EntityState.indent('bar', {
+        pathMode: { foo: 'deleting' },
+        pathUpdating: { foo: true }
+      })
+    ).toEqual({
+      pathMode: { 'bar.foo': 'deleting' },
+      pathUpdating: { 'bar.foo': true }
+    });
+  });
+
+  it('should indent all path based meta data', () => {
+    expect(
+      EntityState.indent('blah', {
+        mode: 'edit',
+        data: { bar: { foo: 'bar' } },
+        pathMode: { foo: 'deleting' },
+        pathChange: { some: 'Something' },
+        pathUpdating: { foo: true }
+      })
+    ).toEqual({
+      mode: 'edit',
+      data: { bar: { foo: 'bar' }},
+      pathMode: { 'blah.foo': 'deleting' },
+      pathChange: { 'blah.some': 'Something' },
+      pathUpdating: { 'blah.foo': true }
+    });
+  });
 });
 
 

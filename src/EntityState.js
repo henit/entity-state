@@ -21,6 +21,7 @@ EntityState.initialize = (source, sourcePath) => {
   const state = {
     // The data this state is for
     data: undefined,
+
     // Unstaged changes to the data (like before sending to a server)
     pathChange: {}, // { [path]: changed-value }
     // Initial value, at the time it started changing in this state. For undo features and showing
@@ -38,16 +39,18 @@ EntityState.initialize = (source, sourcePath) => {
     // Errors that apply to a given place in the data structure
     pathError: {},
 
-    // Request-related
+    // View mode, like 'edit' for toggeling display of a form
+    mode: undefined,
+    // View modes relevant for a given path. Like editing an object that is part of an array
+    pathMode: {},
     // An operation that will load new data into this state when done is pending
     loading: false,
-    // An operation that is updating the remote source of this data is pending
-    updating: false,
-
     // Loading data pending for a given subset of data
     pathLoading: {}, // [path]: true
+    // An operation that is updating the remote source of this data is pending
+    updating: false,
     // Updating data pending for given subset of data
-    padhUpdating: {} // [path]: true
+    pathUpdating: {} // [path]: true
   };
 
   // return (source && sourcePath) ?
@@ -217,6 +220,30 @@ EntityState.clean = (source, sourcePath) => {
       pathError: {}
     };
 };
+
+/**
+ * Indent path-based metadata of structure, adding a given prefix to all path-based keys
+ * @param {string} pathPrefix The prefix for the existing path keys
+ * @param {object} source Data source containing the state
+ * @return {object} New state
+ */
+EntityState.indent = (pathPrefix, source) =>
+  ['pathError', 'pathChange', 'pathInitial', 'pathMode', 'pathLoading', 'pathUpdating']
+    .reduce((source, statePath) => (
+
+      source[statePath] ?
+        _set(
+          statePath,
+          Object.keys(source[statePath]).reduce((subState, path) => ({
+            ...subState,
+            [`${pathPrefix}.${path}`]: source[statePath][path]
+          }), {}),
+          source
+        )
+        :
+        source
+
+    ), source);
 
 /**
  * Get a copy of the data from a given state object, with the local changes merged in to the structure
