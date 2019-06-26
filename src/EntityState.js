@@ -1,5 +1,6 @@
 import _get from 'lodash/fp/get';
 import _set from 'lodash/fp/set';
+import _omitBy from 'lodash/fp/omitBy';
 
 let EntityState = {};
 
@@ -222,6 +223,26 @@ EntityState.clean = (source, sourcePath) => {
 };
 
 /**
+ * Clean the structure for a given path, removing local changes and errors for paths starting
+ * with the given path, while keeping the rest
+ * @param {string} pathPrefix Prefix of state to clean (leaving others intact)
+ * @param {object} state Entity state object
+ * @return {object} New entity state object
+ */
+EntityState.cleanPath = (pathPrefix, state) =>
+  ['pathError', 'pathChange', 'pathInitial']
+    .reduce((state, statePath) => (
+      state[statePath] ?
+        _set(
+          statePath,
+          _omitBy((val, path) => path.substr(0, pathPrefix.length) === pathPrefix, state[statePath]),
+          state
+        )
+        :
+        state
+    ), state);
+
+/**
  * Indent path-based metadata of structure, adding a given prefix to all path-based keys
  * @param {string} pathPrefix The prefix for the existing path keys
  * @param {object} source Data source containing the state
@@ -230,7 +251,6 @@ EntityState.clean = (source, sourcePath) => {
 EntityState.indent = (pathPrefix, source) =>
   ['pathError', 'pathChange', 'pathInitial', 'pathMode', 'pathLoading', 'pathUpdating']
     .reduce((source, statePath) => (
-
       source[statePath] ?
         _set(
           statePath,
@@ -242,7 +262,6 @@ EntityState.indent = (pathPrefix, source) =>
         )
         :
         source
-
     ), source);
 
 /**

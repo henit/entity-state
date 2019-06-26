@@ -362,6 +362,46 @@ describe('\nEntityState.clear', () => {
 
 });
 
+// CLEAN
+
+test('EntityState.cleanPath', () => {
+  const actual = EntityState.cleanPath('foo', {
+    data: {
+      foo: 'Foo!!',
+      bar: 'Bar!!'
+    },
+    pathChange: {
+      foo: 'fooooooo',
+      bar: 'baaaaaar'
+    },
+    pathError: {
+      foo: { message: 'Wrong foo' },
+      bar: { message: 'Wrong bar' }
+    },
+    pathUpdating: {
+      foo: true,
+      bar: true
+    }
+  });
+
+  expect(actual).toEqual({
+    data: {
+      foo: 'Foo!!',
+      bar: 'Bar!!'
+    },
+    pathChange: {
+      bar: 'baaaaaar'
+    },
+    pathError: {
+      bar: { message: 'Wrong bar' }
+    },
+    pathUpdating: {
+      foo: true,
+      bar: true
+    }
+  });
+});
+
 describe('EntityState.indent', () => {
   it('should indent limited state sets', () => {
     expect(
