@@ -28,12 +28,19 @@ An entity state is an object that contains the data (like an object representing
 Property        | Type                | Description
 ---             | ---                 | ---
 `data`          | *object* or *array* | The data this state describes
-`pathChange`    | *object*            | Local changes to the data. Flat structure with deep path as object keys
+`pathChange`    | *object*            | { [path]: value } Local changes to the data. Flat structure with deep path as object keys
+`pathInitial`   | *object*            | { [path]: value } The initial value when it was first changed. Can remain after submit to indicate change was made, and making it possible to undo changes.
 `initializedAt` | *string*            | Timestamp when this state where first initialized
-`loadedAt`      | *string*            | Timestamp when the current version of the state-data was loaded
+`loadedAt`      | *string*            | Timestamp when the current version of the state-data was loaded (like last server fetch)
 `changedAt`     | *string*            | Timestamp when last local unsynced change where added to the state
 `error`         | *object*            | Error object that is relevant for the whole data set
-`pathError`     | *object*            | Path-specific error messages. Flat structure with deep paths as object keys
+`pathError`     | *object*            | { [path]: Error } Path-specific error messages. Flat structure with deep paths as object keys
+`mode`          | *string*            | View mode for the data. Like being edited, deleted or other feature-states
+`pathMode`      | *object*            | View mode for given paths. Like editing form for one object from an array, while the rest remain in non-edit view.
+`loading`       | *boolean*           | An ongoing operation that will load new data into the state when done
+`pathLoading`   | *object*            | { [path]: boolean } Loading data for given subsets of data
+`updating`      | *boolean*           | An ongoing operation that wis updating the remote source of the data
+`pathUpdating`  | *object*            | { [path]: boolean } Updating data for given subsets of data
 
 **Example**
 
