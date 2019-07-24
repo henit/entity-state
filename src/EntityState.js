@@ -272,15 +272,20 @@ EntityState.indent = (pathPrefix, source) =>
  */
 EntityState.dataWithChanges = (state = {}) => {
   const {
-    data = {},
+    data,
     pathChange = {}
   } = state;
+
+  if (data === undefined || data === null) {
+    // No data, avoid returning an empty object
+    return data;
+  }
 
   // Merge staged changes with original data to form the active data set
   return Object.keys(pathChange)
     .reduce((data, path) =>
       _set(path, pathChange[path], data)
-    , data);
+    , data || {});
 };
 
 export default EntityState;
