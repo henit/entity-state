@@ -1,6 +1,6 @@
 {
   "name": "entity-state",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Composable meta-logic for JSON-based entity data",
   "main": "lib/index.js",
   "files": [
