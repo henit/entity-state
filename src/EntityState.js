@@ -1,5 +1,6 @@
 import _get from 'lodash/fp/get';
 import _set from 'lodash/fp/set';
+import _unset from 'lodash/fp/unset';
 import _omitBy from 'lodash/fp/omitBy';
 
 let EntityState = {};
@@ -108,9 +109,17 @@ EntityState.set = (path, value, source, sourcePath) => {
   }
 
   return (source && sourcePath) ?
-    _set(`${sourcePath}.data.${path}`, value, source)
+    (value === undefined ?
+      _unset(`${sourcePath}.data.${path}`, source)
+      :
+      _set(`${sourcePath}.data.${path}`, value, source)
+    )
     :
-    _set(`data.${path}`, value, source || EntityState.initialize());
+    (value === undefined ?
+      _unset(`data.${path}`, source || EntityState.initialize())
+      :
+      _set(`data.${path}`, value, source || EntityState.initialize())
+    );
 };
 
 /**

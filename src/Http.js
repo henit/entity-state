@@ -34,9 +34,12 @@ Http.request = async (options = {}) => {
 
   let fetchHeaders = new Headers();
   if (headers) {
-    for (let name in headers) {
-      fetchHeaders.append(name, headers[name]);
-    }
+    // for (const name in headers) {
+    //   fetchHeaders.append(name, headers[name]);
+    // }
+    Object
+      .keys(headers)
+      .forEach(name => fetchHeaders.append(name, headers[name]));
   }
   if (contentType && (!headers || !headers['Content-Type'])) {
     fetchHeaders.append('Content-Type', contentType);
