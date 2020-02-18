@@ -20,7 +20,11 @@ Http.request = async (options = {}) => {
     query = {},
     body,
     credentials = 'include',
-    contentType = 'application/json'
+    contentType = 'application/json',
+    cache = 'default',
+    redirect = 'follow',
+    referrerPolicy = 'client',
+    mode = 'cors'
   } = options;
 
   const url = baseUrl
@@ -55,6 +59,10 @@ Http.request = async (options = {}) => {
       headers: fetchHeaders,
       method,
       credentials,
+      cache,
+      redirect,
+      referrerPolicy,
+      mode,
       body: (contentType && contentType.includes('json')) ? fetchBody : body
     });
 
