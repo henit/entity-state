@@ -243,17 +243,20 @@ Make HTTP Request
 
 **Options:**
 
-Property       | Type      | Description
----            | ---       | ---
-`baseUrl`      | *string*  | Base url to the root of the target API/resource
-`headers`      | *object*  | Headers ({ [name]: contents })
-`method`       | *string*  | Request method
-`path`         | *string*  | Path (under baseUrl) to the endpoint
-`query`        | *object*  | URL query parameters
-`body`         | *object*  | Request body
-`credentials`  | *string*  | Credential option: `omit`, `same-origin`, or `include` (default)
-`contentType`  | *string*  | Shortcut for setting the Content-Type header
-
+Property        | Type      | Description
+---             | ---       | ---
+`baseUrl`       | *string*  | Base url to the root of the target API/resource
+`headers`       | *object*  | Headers ({ [name]: contents })
+`method`        | *string*  | Request method
+`path`          | *string*  | Path (under baseUrl) to the endpoint
+`query`         | *object*  | URL query parameters
+`body`          | *object*  | Request body
+`credentials`   | *string*  | Credential option: `omit`, `same-origin`, or `include` (default)
+`contentType`   | *string*  | Shortcut for setting the Content-Type header
+`cache`         | *string*  | `no-cache`, `reload`, `force-cache`, `only-if-cached`, `default` (default)
+`redirect`      | *string*  | `manual`, `error`, `follow` (default)
+`referrerPolicy`| *string*  |  `no-referrer`, `client` (default)
+`mode`          | *string*  | `no-cors`, `same-origin`, `cors` (default)
 **Examples:**
 
 ```
